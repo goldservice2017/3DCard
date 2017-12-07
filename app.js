@@ -184,7 +184,7 @@ let conf = {
                 max: -4.2
             },
             cameraPosition:{
-                x: 11.9,
+                x: 2.2,
                 z: 70
             },
             cameraXPos: 6
@@ -221,7 +221,7 @@ let conf = {
             _p: 1.2,
             rotation: 1.3,
             cameraPosition:{
-                x: 7.2,
+                x: 2.8,
                 z: 50
             },
             rotationRules:{
@@ -330,31 +330,31 @@ class Viewer {
                 heightMax = window.innerHeight - 150;
                 this.streched = true;
             }
-            let w_max = this.parentWidth ? this.parentWidth: window.innerWidth * widthRatio;
+            let w_max = this.parentWidth ? this.parentWidth * widthRatio: window.innerWidth * widthRatio;
 
             if (type == 'card_portrait') {
-                // if (heightMax > 1.2 * w_max) {
-                //     w_card = w_max;
-                //     h_card = w_card * 1.2;
-                // } else {
-                //     h_card = heightMax;
-                //     w_card = h_card / 1.2;
-                // }
-                w_card = w_max;
-                h_card = heightMax;
+                if (heightMax > 1.4 * w_max) {
+                    w_card = w_max;
+                    h_card = w_card * 1.4;
+                } else {
+                    h_card = heightMax;
+                    w_card = w_max;
+                }
+                // w_card = w_max;
+                // h_card = heightMax;
             } else if (type == 'card_square') {
-                // if (heightMax > 1.4 * w_max) {
-                //     w_card = w_max;
-                //     h_card = w_card * 1.33;
-                // } else {
-                //     h_card = heightMax;
-                //     w_card = h_card / 1.33;
-                // }
-                w_card = w_max;
-                h_card = heightMax;
+                if (heightMax > 1.2 * w_max) {
+                    w_card = w_max;
+                    h_card = w_card * 1.2;
+                } else {
+                    w_card = w_max;
+                    h_card = heightMax;
+                }
+                // w_card = w_max;
+                // h_card = heightMax;
             } else if (type == 'card_wide') {
                 if (heightMax > w_max) {
-                    w_card = window.innerWidth * widthRatio;
+                    w_card = w_max;
                     h_card = w_card;
                 } else {
                     h_card = heightMax;
@@ -362,9 +362,9 @@ class Viewer {
                 }
             } else if (type == 'invitation_portrait') {
                 heightMax = window.innerHeight - 150;
-                if (heightMax > w_max * 1.2) {
+                if (heightMax > w_max * 1.1) {
                     w_card = w_max;
-                    h_card = w_max * 1.2;
+                    h_card = w_max * 1.1;
                 } else {
                     w_card = w_max;
                     h_card = heightMax;
@@ -389,7 +389,7 @@ class Viewer {
                 heightMax = window.innerHeight - 150;
                 this.streched =true;   
             }
-            let w_max = this.parentWidth ? this.parentWidth: window.innerWidth * widthRatio;
+            let w_max = this.parentWidth ? this.parentWidth * widthRatio: window.innerWidth * widthRatio;
             if (type == 'card_wide') {
                 if (heightMax > w_max) {
                     w_card = w_max;
@@ -399,9 +399,9 @@ class Viewer {
                     w_card = h_card * 1.4;
                 }
             } else if(type == 'card_portrait' || type == 'card_square'){                
-                if (heightMax > w_max) {
+                if (1.6 * heightMax > w_max) {
                     w_card = w_max;
-                    h_card = w_card / 1.1;
+                    h_card = w_max / 1.3;
                 } else {
                     h_card = heightMax;
                     w_card = h_card * 1.6;
@@ -461,10 +461,12 @@ class Viewer {
                 let zoomScale = this.params[type].desk.cameraZOOM;
                 if (type == 'invitation_wide') {
                     if (this.cardWidth > this.cardHeight) {
-                        zoomScale = zoomScale * (this.cardHeight / 930);
+                        zoomScale = zoomScale * (this.cardHeight / 850);
                     } else {                        
-                        zoomScale = zoomScale * (this.cardWidth / 968);
+                        zoomScale = zoomScale * (this.cardWidth / 850);
                     }
+
+
                 } else if (type == 'invitation_portrait') {        
                     if (this.cardWidth > this.cardHeight) {
                         zoomScale = zoomScale * (this.cardHeight / 930);
@@ -535,7 +537,7 @@ class Viewer {
                         zoomScale = 1.4;
                     }
                     if (aspect < 0.8) {
-                        zoomScale = 1.1;
+                        zoomScale = 1.25;
                     } 
                     if (aspect < 0.65) {
                         zoomScale = 0.9;
@@ -551,12 +553,12 @@ class Viewer {
                 this.camera.fov *= 1 / zoomScale;
                 this.camera.updateProjectionMatrix();
                 
-
-                if (type == 'card_square') {
-                    this.camera.position.x = this.params[type].mob.cameraPosition.x * ( this.cardWidth / (zoomScale * 1600.0));
-                } else {
-                    this.camera.position.x = this.params[type].mob.cameraPosition.x * ( this.cardWidth / (zoomScale * 1600.0));;
-                }
+                this.camera.position.x = this.params[type].mob.cameraPosition.x;
+                // if (type == 'card_square') {
+                //     this.camera.position.x = this.params[type].mob.cameraPosition.x * ( this.cardWidth / (zoomScale * 1600.0));
+                // } else {
+                //     this.camera.position.x = this.params[type].mob.cameraPosition.x * ( this.cardWidth / (zoomScale * 1600.0));;
+                // }
                 this.camera.position.z = this.params[type].mob.cameraPosition.z;
                 
             } else {
@@ -582,7 +584,7 @@ class Viewer {
                 
                 this.camera.fov *= 1 / zoomScale;
                 this.camera.updateProjectionMatrix();
-                this.camera.position.x = this.params[type].desk.cameraPosition.x;
+                this.camera.position.x = 0;
                 this.camera.position.z = this.params[type].desk.cameraPosition.z;
             }
         }
@@ -658,7 +660,13 @@ class Viewer {
         //this.renderer.setPixelRatio(window.devicePixelRatio);
         this.renderer.setPixelRatio( 1 );
         this.renderer.setSize(this.cardWidth, this.cardHeight);
-        document.getElementById('envelope').appendChild( this.renderer.domElement );
+
+        document.getElementById('envelope').appendChild( this.renderer.domElement );        
+        // let gl = this.renderer.domElement.getContext;
+        // gl.webkitImageSmoothingEnabled = false;
+        // gl.mozImageSmoothingEnabled = false;
+        // gl.imageSmoothingEnabled = false; //future
+
         this.renderer.shadowMap.enabled = false;
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         this.renderer.gammaInput = true;
@@ -825,7 +833,7 @@ class Viewer {
             }
             else if (type == 'invitation_portrait') {
                 if(window.innerWidth > 800) {
-                    if (this._objects.model.position.y > -1.4)
+                    if (this._objects.model.position.y > -1.6)
                         this._objects.model.position.y -= 0.03;
                     else {
                         if (!this.time) {
@@ -857,7 +865,7 @@ class Viewer {
 
                 }
                 else{
-                    if (this._objects.model.position.y > -1.4)
+                    if (this._objects.model.position.y > -1.6)
                         this._objects.model.position.y -= 0.04;
                     else {
                         if (!this.time) {
@@ -1504,7 +1512,7 @@ class Invitation {
         function initSide( nextSide ){
             var manager = new THREE.LoadingManager();
             self[nextSide.name] = new THREE.Texture();
-            self[nextSide.name].magFilter = THREE.LinearFilter;
+            self[nextSide.name].magFilter = THREE.NearestFilter;
             self[nextSide.name].minFilter = THREE.LinearFilter;
             var loader = new THREE.ImageLoader( manager );
             self[nextSide.name].image = loader.load( nextSide.texture );
@@ -1645,7 +1653,8 @@ class Invitation {
                         if(child.name == 'Plane 2'){
                             child.material.map = self.texture_page;
                             child.position.y = 0.27;
-                            child.scale.x = 0.95;
+                            child.scale.x = 1.15;
+                            child.scale.y = 1.15;
                             child.castShadow = true;
                             child.material.side = 2;
                             child.position.z = 1;
